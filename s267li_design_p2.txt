@@ -1,0 +1,31 @@
+CLASS DESIGN
+
+The classes I implemented were Linked List and Time Series.
+LinkedList::LinkedList() is a constructor that allocates memory for and initializes the head and tail pointers of the linked list to nullptr.
+LinkedList::~LinkedList() is a destructor that iterates through the linked list with a current pointer and deletes each node until the end of the linked list is reached.
+LinkedList::load(std::string country) is a function that reads data in from a file and finds the line whose country matches with the user's input. Then, it calls TimeSeries::load() to create a time series with that line. It then stores that time series in a node of the linked list, and repeats this process for all lines in the file with that country name.
+LinkedList::list() is a function that prints the linked list's country name, country code, and all of the series names in the linked list.
+LinkedList::add(std::string Series_Code, double Y, double D) is a function that takes in a series code, a year, and data from the user. If that series code is valid and it is in the linked list, then the function will add the year and data to the time series with the corresponding series code. If the year is already in the time series, the year and data will not be added. This function uses the TimeSeries::add() function.
+LinkedList::update(std::string Series_Code, double Y, double D) is a function that takes in a series code, a year, and data from the user. If that series code is valid and it is in the linked list, then the function will update the year and data to the time series wtht the corresponding series code. If the year is not already in the time series, the year and data will not be updated. This function uses the TimeSeries::update() function.
+LinkedList::print(std::string Series_Code) is a function that takes in a series code from the user, and if that series code is valid and in the linked list, then the function will print out all the year-data pairs in that time series. This function uses the TimeSeries::print() function.
+LinkedList::deleteTS(std::string Series_Code) is a function that takes in a series code from the user, and if that series code is valid and in the linked list, then the function will delete that time series from the linked list.
+LinkedList::biggest() is a function that uses TimeSeries::mean() to calculate the mean for every time series. It will then compare all the means and return the series code of the time series with the biggest mean.
+
+TimeSeries::TimeSeries() is a constructor that allocates memory for and initializes both the year and data dynamic arrays as type double. They are both initialized with a capacity of 2.
+TimeSeries::~TimeSeries() is a destructor that deletes both the year and data dynamic arrays and sets them both to nullptr. This is to prevent memory leaks.
+TimeSeries::load(string filename) is a function that reads data in from a file and fills in the year and data arrays, but ignoring any invalid data. Once the arrays are full, two new dynamic arrays are created with double the capacity of the old arrays, and the old array elements are copied over. The old arrays are then deleted and pointed to the new arrays to prevent memory leaks.
+TimeSeries::print() is a function that prints all the year-data pairs to the user, unless there are no valid data points (the arrays are empty).
+TimeSeries::add(double y, double d) is a function that adds a year-data pair to the arrays if that year doesn't exist already. Invalid data can be added.
+TimeSeries::update(double y, double d) is a function that updates the data value of an existing year. If the user updates the year to have invalid data, the year-data pair is removed from the array. If the number of year-data pairs becomes less than or equal to one fourth of the array capacity, the array capacities are halved.
+TimeSeries::mean() is a function that finds the mean of all of the data values, excluding invalid data values.
+TimeSeries::is_monotonic() is a function that determines whether the time series is monotonic or not. Fails if there are no valid data points.
+TimeSeries::best_fit (double &m, double &b) is a function that finds the slope and y-intercept of the line of best fit for all the data values. Fails if there are no valid data points.
+
+
+ALTERNATIVES AND JUSTIFICATION
+
+I decided to read in invalid data, but I decided to exclude invalid data from the year and data arrays. I decided on this method because it simplifies the print, is_monotonic, and best_fit functions since they wouldn't need to deal with invalid data in the array if there is none. This also effectively decreases runtime. An alternative that I could've chosen is to keep invalid data values in the arrays. I didn't choose to do this because I would have need to include extra checks and conditions in the print, is_monotonic, and best_fit functions.
+
+RUNTIME ANALYSIS
+
+The worst possible runtime for my add function is O(x+y), where x is the number of nodes in the linked list, and y is the number of data in the time series. If the series code of the time series that we are adding to is the very last node of my linked list, and if the year we are adding must be added to the very end of the time series arrays, the function would need to iterate through the entire linked list to reach that last node, and iterate through the entire time series array to add the data point at the very end. The worst runtime possible for my delete function is O(x+y),where x is the number of nodes in my linked list, and y is the number of data in the time series to delete. If the series code that needs to be deleted is stored in the very last node in my linked list, the function would need to iterate through all x nodes in my linked list to reach the last node, and would need to delete all y data points such as country name, country code, series name, series code, and all data points in the time series.
